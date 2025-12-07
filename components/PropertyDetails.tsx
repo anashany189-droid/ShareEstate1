@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Property, UserProfile } from '../types';
 import { analyzeProperty } from '../services/geminiService';
-import ReactMarkdown from 'react-markdown'; // Actually, let's process manually to avoid extra dep if possible, but basic line breaks are fine.
+import ReactMarkdown from 'react-markdown';
 import { 
     MapPin, 
     TrendingUp, 
@@ -111,10 +111,10 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property, user, onInv
              </div>
              
              {analyzed && (
-                 <div className="prose prose-sm prose-indigo text-slate-700 bg-white p-4 rounded-lg border border-indigo-100 shadow-sm">
-                     <div className="whitespace-pre-line">
+                 <div className="bg-white p-5 rounded-lg border border-indigo-100 shadow-sm">
+                     <ReactMarkdown className="prose prose-sm prose-indigo max-w-none text-slate-700">
                         {aiAnalysis}
-                     </div>
+                     </ReactMarkdown>
                  </div>
              )}
              {!analyzed && !loadingAi && (
