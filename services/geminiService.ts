@@ -1,11 +1,17 @@
 import { GoogleGenAI } from "@google/genai";
 import { Property } from "../types";
 
-// Initialize the Gemini API client exclusively with process.env.API_KEY
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Helper function to safely get the AI instance
+const getAiClient = () => {
+  const apiKey = process.env.API_KEY;
+  if (!apiKey) return null;
+  return new GoogleGenAI({ apiKey });
+};
 
 export const analyzeProperty = async (property: Property): Promise<string> => {
-  if (!process.env.API_KEY) {
+  const ai = getAiClient();
+  
+  if (!ai) {
     return "AI Analysis unavailable: API Key not configured.";
   }
 
@@ -50,7 +56,8 @@ export const analyzeProperty = async (property: Property): Promise<string> => {
 };
 
 export const getMarketInsights = async (): Promise<string> => {
-    if (!process.env.API_KEY) return "Market insights unavailable.";
+    const ai = getAiClient();
+    if (!ai) return "Market insights unavailable (Key missing).";
     
     try {
         const response = await ai.models.generateContent({
@@ -59,6 +66,7 @@ export const getMarketInsights = async (): Promise<string> => {
         });
         return response.text || "No insights available.";
     } catch (e) {
+        console.error("Market Insights Error:", e);
         return "Failed to fetch market insights.";
     }
 }
